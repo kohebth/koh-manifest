@@ -1,0 +1,39 @@
+version: '3.18'
+    
+services:
+  coredns:
+    build:
+      dockerfile: docker/coredns.Dockerfile
+      context: .
+    image: koh/sv-coredns
+    container_name: sv-coredns
+    expose:
+      - "53"
+    ports:
+      - "853:53/udp" # testing DNS resolve from host: `dig @127.0.0.1 -p 853 <container-name>.vps-network`
+    restart: on-failure
+    networks:
+      vps-network:
+      dns-network:
+        ipv4_address: 10.5.0.5
+
+  sis:
+    image: custom-ubuntu:22.04
+    container_name: sis
+    expose:
+     - "22"
+    networks:
+      vps-network:
+
+networks:
+  vps-network:
+    driver: bridge
+    external: true
+  dns-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24
+        - gateway: 10.5.0.1
+        - ip_range: 10.5.0.0/26
+    external: true

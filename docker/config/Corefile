@@ -1,0 +1,19 @@
+.:53 {
+    rewrite name suffix .vps-network . answer auto
+    
+    view docker {
+        expr name() endsWith '.vps-network.'
+    }
+    
+    log
+    errors
+    cancel
+    health
+    forward . /etc/resolv.conf
+}
+
+. {
+    acl {
+        block
+    }
+}
