@@ -1,5 +1,5 @@
 version: '3.18'
-    
+
 services:
   coredns:
     build:
@@ -7,8 +7,6 @@ services:
       context: .
     image: koh/sv-coredns
     container_name: sv-coredns
-    expose:
-      - "53"
     ports:
       - "853:53/udp" # testing DNS resolve from host: `dig @127.0.0.1 -p 853 <container-name>.vps-network`
     restart: on-failure
