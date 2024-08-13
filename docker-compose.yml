@@ -2,6 +2,7 @@ version: '3.18'
 
 services:
   coredns:
+    env_file: .env
     build:
       dockerfile: docker/coredns.Dockerfile
       context: .
@@ -16,11 +17,12 @@ services:
         ipv4_address: 10.5.0.5
 
   db:
+    env_file: .env
     build:
       dockerfile: docker/db.Dockerfile
       context: .
     image: koh/db-hub
-    container_name: vps_db
+    container_name: sv-database
     ports:
       - "3306:3306"
     volumes:
