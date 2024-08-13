@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cp develop.env .env
+
 docker compose down
 
 # Remove unused resource
