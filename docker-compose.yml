@@ -15,6 +15,11 @@ services:
       vps-network:
       dns-network:
         ipv4_address: 10.5.0.5
+    deploy:
+      resources:
+        limits:
+          cpus: 0.8
+          memory: 128M
 
   sv-db:
     env_file: .env
@@ -23,12 +28,19 @@ services:
       context: .
     image: koh/db-hub
     container_name: sv-database
+    profiles:
+      - develop
     ports:
       - "3306:3306"
     volumes:
       - .docker_cache/db_data:/var/lib/mysql
     networks:
       - vps-network
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 512M
 
   sv-zoo:
     image: confluentinc/cp-zookeeper:7.3.2
@@ -39,9 +51,13 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zoo1:2888:3888
-    
     networks:
       - vps-network
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 128M
 
   sv-kafka1:
     image: confluentinc/cp-kafka:7.3.2
@@ -66,9 +82,13 @@ services:
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
     depends_on:
       - sv-zoo
-
     networks:
       - vps-network
+    deploy:
+      resources:
+        limits:
+          cpus: 0.5
+          memory: 512M
 
   sv-mail:
     image: ghcr.io/docker-mailserver/docker-mailserver:latest
@@ -95,6 +115,11 @@ services:
     restart: always
     networks:
       - mail-network
+    deploy:
+      resources:
+        limits:
+          cpus: 0.2
+          memory: 64M
 
 networks:
   vps-network:
@@ -104,7 +129,7 @@ networks:
   dns-network:
     driver: bridge
     external: true
-  
+
   mail-network:
     driver: bridge
     external: true

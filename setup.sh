@@ -8,8 +8,8 @@ docker compose -f docker-compose.yml down
 ./script/docker-container-remove.sh sv-coredns
 ./script/docker-container-remove.sh sv-database
 ./script/docker-container-remove.sh sv-mailserver
-#./script/docker-container-remote.sh sv-zoo1
-#./script/docker-container-remote.sh sv-kafkacluster1
+./script/docker-container-remote.sh sv-kafkacluster1
+./script/docker-container-remote.sh sv-zoo
 
 # create required network
 ./script/dns.docker-network.create.sh
