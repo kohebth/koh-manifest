@@ -2,7 +2,6 @@ version: '3.18'
 
 services:
   sv-dns:
-    env_file: .env
     build:
       dockerfile: docker/coredns.Dockerfile
       context: .
@@ -24,7 +23,7 @@ services:
           memory: 128M
 
   sv-db:
-    env_file: .env
+    env_file: env/mariadb.env
     build:
       dockerfile: docker/db.Dockerfile
       context: .
@@ -93,28 +92,29 @@ services:
           memory: 512M
 
   sv-mailserver:
-    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    build:
+      dockerfile: docker/mail.Dockerfile
+      context: .
+    image: koh/mailserver
     container_name: sv-mailserver
-    # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
-    hostname: mail.sinhvien.in
+    hostname: mail.chastnyy.online
+    domainname: chastnyy.online
+    env_file: env/mailserver.env
     ports:
-      - "25:25"
-      - "465:465"
-      - "587:587"
-      - "993:993"
+      - "25:25"    # SMTP
+      - "587:587"  # Submission
+      - "143:143"  # IMAP
+      - "993:993"  # IMAPS
     volumes:
       - ./.docker_cache/dms/mail-data/:/var/mail/
       - ./.docker_cache/dms/mail-state/:/var/mail-state/
       - ./.docker_cache/dms/mail-logs/:/var/log/mail/
-      - ./.docker_cache/dms/config/:/tmp/docker-mailserver/
+      - ./docker/mailconfig/:/tmp/docker-mailserver/
       - /etc/localtime:/etc/localtime:ro
-    environment:
-      - ENABLE_RSPAMD=1
-      - ENABLE_CLAMAV=1
-      - ENABLE_FAIL2BAN=1
+      - ./letsencrypt/live/chastnyy.online:/etc/letsencrypt/live/chastnyy.online # Mount Let's Encrypt certificates
+    restart: always
     cap_add:
       - NET_ADMIN # For Fail2Ban to work
-    restart: always
     networks:
       - mail-network
     deploy:

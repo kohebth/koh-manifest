@@ -1,2 +1,4 @@
 .docker_cache
 .env
+.idea
+letsencrypt
