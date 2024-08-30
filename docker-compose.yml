@@ -15,6 +15,8 @@ services:
       vps-network:
       dns-network:
         ipv4_address: 10.5.0.5
+      mail-network:
+      sv-network:
     deploy:
       resources:
         limits:
@@ -35,7 +37,7 @@ services:
     volumes:
       - .docker_cache/db_data:/var/lib/mysql
     networks:
-      - vps-network
+      - kafka-network
     deploy:
       resources:
         limits:
@@ -52,14 +54,14 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_SERVERS: zoo1:2888:3888
     networks:
-      - vps-network
+      - kafka-network
     deploy:
       resources:
         limits:
           cpus: 0.5
           memory: 128M
 
-  sv-kafka1:
+  sv-kafkacluster1:
     image: confluentinc/cp-kafka:7.3.2
     container_name: sv-kafkacluster1
     ports:
@@ -83,14 +85,14 @@ services:
     depends_on:
       - sv-zoo
     networks:
-      - vps-network
+      - kafka-network
     deploy:
       resources:
         limits:
           cpus: 0.5
           memory: 512M
 
-  sv-mail:
+  sv-mailserver:
     image: ghcr.io/docker-mailserver/docker-mailserver:latest
     container_name: sv-mailserver
     # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
@@ -131,6 +133,14 @@ networks:
     external: true
 
   mail-network:
+    driver: bridge
+    external: true
+
+  kafka-network:
+    driver: bridge
+    external: true
+
+  sv-network:
     driver: bridge
     external: true
 
