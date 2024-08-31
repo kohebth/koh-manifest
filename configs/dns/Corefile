@@ -1,6 +1,6 @@
 .:53 {
-    rewrite name suffix .vps-network . answer auto
-    
+    rewrite name suffix .vps.chastnyy.online .vps-network answer auto
+
     view docker {
         expr name() endsWith '.vps-network.'
     }

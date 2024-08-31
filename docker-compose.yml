@@ -23,14 +23,14 @@ services:
           memory: 128M
 
   sv-db:
+    profiles:
+      - dev
     env_file: env/mariadb.env
     build:
       dockerfile: docker/db.Dockerfile
       context: .
     image: koh/db-hub
     container_name: sv-database
-    profiles:
-      - develop
     ports:
       - "3306:3306"
     volumes:
@@ -92,26 +92,26 @@ services:
           memory: 512M
 
   sv-mailserver:
+    env_file: env/mailserver.env
     build:
-      dockerfile: docker/mail.Dockerfile
+      dockerfile: docker/mailserver.Dockerfile
       context: .
     image: koh/mailserver
     container_name: sv-mailserver
-    hostname: mail.chastnyy.online
+    hostname: mail
     domainname: chastnyy.online
-    env_file: env/mailserver.env
     ports:
       - "25:25"    # SMTP
       - "587:587"  # Submission
       - "143:143"  # IMAP
       - "993:993"  # IMAPS
     volumes:
-      - ./.docker_cache/dms/mail-data/:/var/mail/
-      - ./.docker_cache/dms/mail-state/:/var/mail-state/
-      - ./.docker_cache/dms/mail-logs/:/var/log/mail/
-      - ./docker/mailconfig/:/tmp/docker-mailserver/
+#      - ./.docker_cache/dms/mail-data/:/var/mail/
+#      - ./.docker_cache/dms/mail-state/:/var/mail-state/
+#      - ./.docker_cache/dms/mail-logs/:/var/log/mail/
+      - ./configs/mailserver/:/tmp/docker-mailserver/
       - /etc/localtime:/etc/localtime:ro
-      - ./letsencrypt/live/chastnyy.online:/etc/letsencrypt/live/chastnyy.online # Mount Let's Encrypt certificates
+      - /etc/letsencrypt/:/etc/letsencrypt/ # Mount Let's Encrypt certificates
     restart: always
     cap_add:
       - NET_ADMIN # For Fail2Ban to work
@@ -120,8 +120,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: 0.2
-          memory: 64M
+          cpus: 0.5
+          memory: 256M
 
 networks:
   vps-network:
