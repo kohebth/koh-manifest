@@ -1,0 +1,30 @@
+version: '3.18'
+
+services:
+  vps:
+    build:
+      dockerfile: docker/ubuntu22.04.Dockerfile
+      context: .
+    image: koh/vps/ubuntu:22.04
+    container_name: example-vps
+    restart: on-failure
+    networks:
+      vps-network:
+      mail-network:
+    environment:
+      - USER=koh
+      - PASSWORD=koh
+    deploy:
+      resources:
+        limits:
+          cpus: 0.8
+          memory: 256M
+
+networks:
+  vps-network:
+    driver: bridge
+    external: true
+
+  mail-network:
+    driver: bridge
+    external: true

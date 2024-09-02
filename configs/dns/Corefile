@@ -1,19 +1,14 @@
 .:53 {
-    rewrite name suffix .vps.chastnyy.online .vps-network answer auto
-
-    view docker {
-        expr name() endsWith '.vps-network.'
+    view example {
+        expr name() matches '^.*\\.vps\\.chastnyy\\.online\\.$'
     }
-    
+    rewrite {
+        name suffix .vps.chastnyy.online .vps-network answer auto
+    }
     log
+    debug
     errors
-    cancel
     health
+    cancel
     forward . /etc/resolv.conf
-}
-
-. {
-    acl {
-        block
-    }
 }

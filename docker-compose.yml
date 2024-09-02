@@ -7,15 +7,18 @@ services:
       context: .
     image: koh/sv-coredns
     container_name: sv-coredns
-    ports:
-      - "853:53/udp" # testing DNS resolve from host: `dig @127.0.0.1 -p 853 <container-name>.vps-network`
     restart: on-failure
+#    ports:
+#      - "53:53/udp"
+#      - "53:53/tcp"
+    expose:
+      - 53
     networks:
       vps-network:
       dns-network:
         ipv4_address: 10.5.0.5
-      mail-network:
-      sv-network:
+#      mail-network:
+#      sv-network:
     deploy:
       resources:
         limits:
