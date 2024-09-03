@@ -1,9 +1,4 @@
 vps-network.:53 {
-    hosts {
-        192.168.63.9 example-vps.sv.vps-network
-	192.168.63.9 sv.vps-network
-	fallthrough
-    }
     log
     errors
     cancel
