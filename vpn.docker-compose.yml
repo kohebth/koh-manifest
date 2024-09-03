@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  openvpn:
+    env_file: env/vpn.env
+    build:
+      dockerfile: docker/vpn.Dockerfile
+      context: .
+    image: koh/openvpn
+    container_name: sv-openvpn
+    volumes:
+      - ./configs/vpn/openvpn:/etc/openvpn
+    ports:
+      - "1194:1194/udp"
+    devices:
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks:
+      - vps-network
+    deploy:
+      resources:
+        limits:
+          cpus: 0.8
+          memory: 128M
+
+networks:
+  vps-network:
+    external: true

@@ -23,7 +23,7 @@ services:
       resources:
         limits:
           cpus: 0.8
-          memory: 128M
+          memory: 48M
 
   sv-db:
     profiles:

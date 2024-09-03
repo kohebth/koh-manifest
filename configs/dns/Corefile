@@ -1,14 +1,18 @@
-.:53 {
-    view example {
-        expr name() matches '^.*\\.vps\\.chastnyy\\.online\\.$'
-    }
-    rewrite {
-        name suffix .vps.chastnyy.online .vps-network answer auto
+vps-network.:53 {
+    hosts {
+        192.168.63.9 example-vps.sv.vps-network
+	192.168.63.9 sv.vps-network
+	fallthrough
     }
     log
-    debug
     errors
-    health
     cancel
     forward . /etc/resolv.conf
 }
+
+#sv.vps-network.:53 {
+#    rewrite name suffix .sv.vps-network .vps-network. answer auto
+#    log
+#    cancel
+#    forward . /etc/resolv.conf
+#}
